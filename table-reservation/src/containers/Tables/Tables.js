@@ -39,6 +39,19 @@ class Tables extends Component {
                 customerName: name
             })
         })  
+
+        axios.get('/orders.json').then(res => {
+            const fetchCustomers = [];
+            for(let customer in res.data) {
+                fetchCustomers.push(customer);
+            }
+            this.setState({
+                customerId: fetchCustomers[fetchCustomers.length-1]
+            })
+            console.log(this.state.customerId)
+        }).catch(err => {
+            console.log(err)
+        })
     }
     bookingHandler = (choosenTableId) => {
         this.setState({
@@ -55,19 +68,8 @@ class Tables extends Component {
 
 
     bookedHandler = (idTable) => {
-        axios.get('/orders.json').then(res => {
-            const fetchCustomers = [];
-            for(let customer in res.data) {
-                fetchCustomers.push(customer);
-            }
-            this.setState({
-                customerId: fetchCustomers[fetchCustomers.length-1]
-            })
-            console.log(this.state.customerId)
-        }).catch(err => {
-            console.log(err)
-        })
-        const url = '/orders/a.json';
+        const url = '/orders/' + this.state.customerId + '/orderData.json';
+        console.log(url);
         axios.patch(url, {tableNumber: idTable}).then(res => {
             console.log('OK');
         }
